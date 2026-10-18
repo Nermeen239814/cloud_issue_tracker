@@ -1,7 +1,7 @@
 const fs = require("fs/promises");
 const path = require("path");
 const { randomUUID } = require("crypto");
-const DATA_FILE = path.join(_dirname, " .. ", "data", "issues.json");
+const DATA_FILE = path.join(__dirname, " .. ", "data", "issues.json");
 
 async function readIssues() {
   try {
@@ -30,21 +30,15 @@ async function createIssue(input) {
   await writeIssues(issues);
   return issue;
 }
-async function createIssue(input) {
-  const issues = await readIssues();
-  const issue = {
-    id: randomUUID(),
-    title: input.title.trim(),
-    description: input.description.trim(),
-    priority: input.priority,
-    status: "Open",
-    createdAt: new Date().toISOString(),
-  };
+async function updateIssueStatus(id, status) {
+const issues = await readIssues();
+const issue = issues. find((item) => item.id === id);
+if (!issue) return null;
 
-  issues.push(issue);
-  await writeIssues(issues);
-  return issue;
-}
+issue.status = status;
+await writeIssues(issues);
+return issue;}
+
 module.exports = {
   readIssues,
   createIssue,
